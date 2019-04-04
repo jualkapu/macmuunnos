@@ -6,6 +6,7 @@ import string
 
 # Otetaan argumenttina saatu muokkaamaton .xlsx file MAC osoitteista
 inputFile = sys.argv[1]
+ou = sys.argv[2]
 
 # Avataan syötetty exeli ja valitaan eka taulukko
 book = open_workbook(inputFile)
@@ -17,7 +18,7 @@ sheet = book.sheet_by_index(0)
 values = [sheet.row_values(i) for i in range(0, sheet.nrows)]
 
 # Regex MAC-osoitteelle
-pattern = re.compile("^([0-9A-Fa-f]{2}[:]){5}[0-9A-Fa-f]{2}$")
+pattern = re.compile("^([0-9A-Fa-f]{2}[-:]){5}[0-9A-Fa-f]{2}$")
 
 # Löytyykö listasta virheellisiä MAC-osoitteita
 invalids = False
@@ -42,7 +43,8 @@ for x in range(len(values) - 1,  0, -1):
 #muutetaan sisältö oikeaan muotoon
 for x in range(0, len(values)):
 	str1 = ''.join(values[x]).replace(':',' ') # Poistetaan kaksoispisteet
-	str1 = str1 + ',"OU=Inet-Media,OU=Devices,DC=pos2,DC=veikkaus,DC=fi"' # Lisataan tarvittava loppu
+	str1 = str1.replace('-', '')
+	str1 = str1 + ',"OU=' + ou + ',OU=Devices,DC=pos2,DC=veikkaus,DC=fi"' # Lisataan tarvittava loppu
 	values[x] = re.sub(r"\s+", "", str1)
 
 # Muutetaan eka rivi syottokelpoiseen muotoon
