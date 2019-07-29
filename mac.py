@@ -3,10 +3,19 @@ import sys
 import csv
 import re
 import string
+import os
 
 # Otetaan argumenttina saatu muokkaamaton .xlsx file MAC osoitteista
 inputFile = sys.argv[1]
 ou = sys.argv[2]
+
+# Poistetaan vanhat filut jos jäänyt samaan sijaintiin
+def remove(file):
+	if(os.path.exists(file)):
+		os.remove(file)
+		
+remove(os.path.join(os.getcwd(),"virheelliset.csv"))
+remove(os.path.join(os.getcwd(),"output.csv"))
 
 # Avataan syötetty exeli ja valitaan eka taulukko
 book = open_workbook(inputFile)
@@ -51,6 +60,7 @@ for x in range(0, len(values)):
 values[0] = 'username,uo'
 	
 # loopataan listan läpi ja kirjoitetaan muutetut tiedot uuteen filuun
+# with open -rakenne sulkee tiedoston automaattisesti kun valmis. Ei tarvii closata erikseen
 with open('output.csv','w') as file: 
 	for x in range(0, len(values)):
 		file.write(values[x])
